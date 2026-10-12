@@ -25,23 +25,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11'
 
-      - name: Install Dependencies and Build Web Assets
+      - name: Prepare Web Assets
         run: |
-          npm ci || npm install
-          npm run build
           mkdir -p app/src/main/assets
-          cp -r dist/* app/src/main/assets/
+          if [ -d "dist" ]; then
+            cp -r dist/* app/src/main/assets/
+          fi
           rm -rf app/src/main/assets/downloads
+          echo "Assets bundled into APK:"
+          ls -la app/src/main/assets/
 
       - name: Prepare Signing Keystore
         run: |
