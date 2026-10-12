@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1726" />
+      <stop offset="50%" stop-color="#0b101b" />
+      <stop offset="100%" stop-color="#050811" />
+    </linearGradient>
+
+    <!-- Emerald Glow Gradient -->
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Cyan Accent Gradient -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Gold/Amber Crown Accent -->
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <!-- Subtle Metallic Border Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(52, 211, 153, 0.6)" />
+      <stop offset="50%" stop-color="rgba(56, 189, 248, 0.3)" />
+      <stop offset="100%" stop-color="rgba(16, 185, 129, 0.15)" />
+    </linearGradient>
+
+    <!-- Drop Shadows and Glows -->
+    <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="subtleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- Squircle Base / App Icon Frame -->
+  <rect x="16" y="16" width="480" height="480" rx="112" ry="112" fill="url(#bgGradient)" stroke="url(#borderGrad)" stroke-width="4" filter="url(#subtleShadow)" />
+
+  <!-- Inner Ambient Radial Glow -->
+  <radialGradient id="innerGlow" cx="50%" cy="35%" r="65%">
+    <stop offset="0%" stop-color="rgba(16, 185, 129, 0.16)" />
+    <stop offset="60%" stop-color="rgba(14, 165, 233, 0.04)" />
+    <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+  </radialGradient>
+  <rect x="20" y="20" width="472" height="472" rx="108" ry="108" fill="url(#innerGlow)" />
+
+  <!-- Central Emblem: Precision Git Network & Production Shield -->
+  <g transform="translate(4, 4)">
+    <!-- Branch connecting lines -->
+    <!-- Main stem (Vertical Git trunk) -->
+    <path d="M190 140 L190 370" stroke="url(#emeraldGrad)" stroke-width="22" stroke-linecap="round" />
+    
+    <!-- Curved branch connecting to right node -->
+    <path d="M190 255 C190 205, 322 235, 322 175 L322 140" fill="none" stroke="url(#cyanGrad)" stroke-width="20" stroke-linecap="round" />
+    
+    <!-- Secondary release branch connecting to bottom right -->
+    <path d="M190 300 C190 345, 322 320, 322 360" fill="none" stroke="url(#emeraldGrad)" stroke-width="18" stroke-linecap="round" stroke-dasharray="1 0" />
+
+    <!-- Git Branch Nodes -->
+    <!-- Top-Left Commit Node (Root) -->
+    <circle cx="190" cy="140" r="32" fill="#0d1522" stroke="url(#emeraldGrad)" stroke-width="12" filter="url(#emeraldGlow)" />
+    <circle cx="190" cy="140" r="14" fill="#34d399" />
+
+    <!-- Center Merge Node -->
+    <circle cx="190" cy="275" r="28" fill="#0d1522" stroke="url(#emeraldGrad)" stroke-width="10" />
+    <circle cx="190" cy="275" r="12" fill="#10b981" />
+
+    <!-- Bottom Commit Node -->
+    <circle cx="190" cy="370" r="32" fill="#0d1522" stroke="url(#emeraldGrad)" stroke-width="12" filter="url(#emeraldGlow)" />
+    <circle cx="190" cy="370" r="14" fill="#34d399" />
+
+    <!-- Top-Right Feature/Release Node -->
+    <circle cx="322" cy="140" r="34" fill="#0d1522" stroke="url(#cyanGrad)" stroke-width="12" filter="url(#emeraldGlow)" />
+    <circle cx="322" cy="140" r="15" fill="#38bdf8" />
+
+    <!-- Bottom-Right Release / APK Artifact Node -->
+    <g transform="translate(322, 360)">
+      <circle cx="0" cy="0" r="34" fill="#0d1522" stroke="url(#emeraldGrad)" stroke-width="12" filter="url(#emeraldGlow)" />
+      <!-- Star/Diamond core inside the APK node -->
+      <polygon points="0,-16 11,-4 16,0 11,4 0,16 -11,4 -16,0 -11,-4" fill="#34d399" />
+    </g>
+
+    <!-- Speed Spark / Lightning CI/CD pulse at junction -->
+    <path d="M262 215 L245 235 L258 236 L242 260 L266 238 L253 237 Z" fill="url(#cyanGrad)" filter="url(#emeraldGlow)" />
+  </g>
+
+  <!-- Elegant corner tech accents -->
+  <circle cx="85" cy="85" r="4" fill="#10b981" opacity="0.4" />
+  <circle cx="105" cy="85" r="4" fill="#10b981" opacity="0.2" />
+  <circle cx="85" cy="105" r="4" fill="#10b981" opacity="0.2" />
+</svg>

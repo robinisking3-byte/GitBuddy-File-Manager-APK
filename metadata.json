@@ -1,0 +1,6 @@
+{
+  "name": "GitBuddy - GitHub File Manager & Actions Control",
+  "description": "Powerful GitHub File Manager and Actions Controller. Upload and extract ZIPs preserving directory trees, batch drag-and-drop file uploads, edit files inline, manage repos, and monitor GitHub Actions logs in real-time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

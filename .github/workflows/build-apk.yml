@@ -1,0 +1,112 @@
+name: Build GitBuddy Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Publish GitBuddy APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11'
+
+      - name: Install Dependencies and Build Web Assets
+        run: |
+          npm ci || npm install
+          npm run build
+          mkdir -p app/src/main/assets
+          cp -r dist/* app/src/main/assets/
+          rm -rf app/src/main/assets/downloads
+
+      - name: Prepare Signing Keystore
+        run: |
+          if [ ! -f "debug.keystore" ]; then
+            echo "Generating debug.keystore..."
+            keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=GitBuddy,O=GitBuddy,C=US"
+          fi
+          ls -la debug.keystore
+
+      - name: Build GitBuddy App APK
+        run: |
+          echo "Starting fresh compilation of GitBuddy Android app from source..."
+          gradle :app:clean :app:assembleRelease --no-daemon --stacktrace || gradle :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Organize & Package Release Artifacts
+        run: |
+          mkdir -p build-output
+          APP_APK=$(find app/build/outputs/apk/ -name "*.apk" ! -name "*unaligned*" ! -path "*/intermediates/*" 2>/dev/null | head -n 1)
+          if [ -z "$APP_APK" ] || [ ! -f "$APP_APK" ]; then
+            echo "Searching all build directories for freshly built APK..."
+            APP_APK=$(find . -name "*.apk" ! -name "*unaligned*" ! -path "./build-output/*" ! -path "*/intermediates/*" 2>/dev/null | head -n 1)
+          fi
+          if [ -n "$APP_APK" ] && [ -f "$APP_APK" ]; then
+            echo "SUCCESS: Freshly built APK created from source code at: $APP_APK"
+            cp -v "$APP_APK" build-output/GitBuddy-File-Manager-v1.0.0.apk
+            cp -v "$APP_APK" build-output/GitBuddy-latest.apk
+          else
+            echo "CRITICAL BUILD FAILURE: No newly compiled APK was produced by Gradle!"
+            exit 1
+          fi
+          echo "Packaged APK artifacts ready for distribution:"
+          ls -lh build-output/
+
+      - name: Upload APKs as GitHub Artifacts (Instant Download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: GitBuddy-File-Manager-v1.0.0
+          path: build-output/*.apk
+          retention-days: 60
+
+      - name: Create GitHub Release with Direct APK Downloads
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: v1.0.0
+          name: "GitBuddy File Manager Release v1.0.0"
+          body: |
+            ### 📱 GitBuddy File Manager Android APK v1.0.0
+            Official GitBuddy application (`com.gitbuddy.filemanager` v1.0.0) compiled freshly from source code via GitHub Actions.
+
+            #### ⬇️ Direct Download Links
+            - 📦 **[Download GitBuddy-File-Manager-v1.0.0.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.0/GitBuddy-File-Manager-v1.0.0.apk)**
+            - 📦 **[Direct Mirror (GitBuddy-latest.apk)](https://github.com/${{ github.repository }}/releases/download/v1.0.0/GitBuddy-latest.apk)**
+
+            #### ✨ Key Features Included:
+            - **Repository Explorer**: Browse files and folders across repositories and branches.
+            - **Recent Commit History**: View commits, commit messages, author avatars, and timestamps.
+            - **ZIP Extractor**: Upload and automatically unpack full directory trees.
+            - **Batch Uploader**: Multi-file drag and drop with commit customization.
+            - **Actions Controller**: Dispatch workflows and watch real-time job logs.
+            - **Multi-Account Manager**: Securely store and switch between GitHub PATs.
+          files: build-output/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

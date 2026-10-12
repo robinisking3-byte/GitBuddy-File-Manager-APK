@@ -1,0 +1,19 @@
+{
+  "name": "GitBuddy - GitHub File Manager & Actions Control",
+  "short_name": "GitBuddy",
+  "description": "Production GitHub File Manager and Actions Controller. Trigger workflows, monitor CI/CD, and download build artifacts.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["developer", "productivity", "utilities"]
+}
